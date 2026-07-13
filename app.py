@@ -1,20 +1,10 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from flask import jsonify
+from courses.models import Course
 
-db = SQLAlchemy()
+@app.route("/api/courses/", methods=["GET"])
+def get_courses():
+    courses = db.session.execute(db.select(Course)).scalars().all()
 
-def create_app():
-    app = Flask(__name__)
+    result = [course.to_dict() for course in courses]
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///courses.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-    db.init_app(app)
-
-    # Initialize Flask-Migrate
-    migrate = Migrate(app, db)
-
-    return app
-
-app = create_app()
+    return jsonify(result), 200
