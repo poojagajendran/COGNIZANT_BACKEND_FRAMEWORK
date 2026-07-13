@@ -23,3 +23,11 @@ class Course(db.Model):
         back_populates="course",
         lazy=True
     )
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "credits": self.credits,
+            "department_id": self.department_id
+        }
+    
